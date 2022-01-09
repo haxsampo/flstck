@@ -31,3 +31,10 @@ multiple selectors
 p, li, h1 {
   color: red;
 }
+
+different types of selectors:
+
+- element selector (p -> selects <p>)
+- ID selector (#my-id selects <p id="my-di"> or <a id="my_id">)
+- attribute selector ( img[ src ] -> selects <img src="myimage.png"> but no <img>)
+- pseudo-class selector - selects the specified elements but only when in the specified state (for example when a cursor hovers over a link) (a:hover selects <a>, but only when the mouse pointer is hovering over the link)
