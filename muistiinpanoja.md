@@ -81,4 +81,9 @@ const average = function(a, b) {
 }
 ```
 
-## Komponentin tila ja tapahtumankäsittely
+### Nuolifunktion console.log
+
+Pro tip 3: Mikäli console.login haluaa vain pikaisesti ujuttaa koodiin nuolifunktiota muuttamatta, voi sen tehdä näppärästi myös tällä tapaa:
+
+const total = 
+  parts.reduce( (s, p) => console.log('what is happening', s, p) || someMagicHere )
