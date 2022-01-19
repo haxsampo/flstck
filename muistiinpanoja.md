@@ -48,6 +48,7 @@ const sum = (p1, p2) => {
   console.log(p2)
   return p1 + p2
 }
+```
 
 Jos parametreja on yksi, sulut voidaan jättää pois:
 ```
@@ -74,7 +75,9 @@ function product(a, b) {
   return a * b
 }
 ```
+
 tai
+
 ```
 const average = function(a, b) {
   return (a + b) / 2
@@ -87,3 +90,19 @@ Pro tip 3: Mikäli console.login haluaa vain pikaisesti ujuttaa koodiin nuolifun
 
 const total = 
   parts.reduce( (s, p) => console.log('what is happening', s, p) || someMagicHere )
+
+### 2C Palvelimella olevan datan hakeminen
+
+- Selain suoritysympäristönä
+- npm
+- Axios ja promiset
+- effect hookit
+- sovelluskehityksen suoritusympäristö
+
+### NPM
+
+Npm-komennot tulee antaa aina projektin juurihakemistossa
+
+### Json/feikkiserveröinti
+
+npx json-server --port=3001 --watch db.json

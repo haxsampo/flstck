@@ -1,4 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import axios from 'axios'
+import personService from './services/persons'
 
 const Filter = (props) => {
   return(
@@ -23,28 +25,35 @@ const Formi = (props) => {
   )
 }
 
+const DelButt = ({id}) => {
+  return(
+    <button onClick={() => personService.remove(id)}>delete</button>
+  )
+}
+
 const PeopleNumbers = (props) => {
   return(
     <ul>
         {props.persons.filter(prs => prs.name.toLowerCase().includes(props.newFilter))
-        .map(prs => <li key={prs.name}>
+        .map(prs => <li key={prs.id}>
           {prs.name} {prs.number}
+          <DelButt id={prs.id}/>
           </li>)}
       </ul>
   )
 }
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: 'Arto Hellas',
-      number: '0700-123-123' },
-      { name: 'Ada Lovelace', number: '39-44-5323523' },
-    { name: 'Dan Abramov', number: '12-43-234345' },
-    { name: 'Mary Poppendieck', number: '39-23-6423122' }
-  ]) 
+  const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [newFilter, setNewFilter] = useState('')
+
+  personService
+    .getAll()
+    .then(initialPersons => {
+      setPersons(initialPersons)
+    })
 
   const addName = (event) => {
     event.preventDefault()
@@ -52,13 +61,27 @@ const App = () => {
       name: newName,
       number: newNumber
     }
-    let onlynames = persons.map(a => a.name)
-    if(!(persons.map(a => a.name).includes(newName))) {
-      setPersons(persons.concat(kakkapylly))
-      setNewName('')
-      setNewNumber('')
+    let onlynames = persons.map( prs => prs.name)
+    if(onlynames.includes(newName)) {
+      let result = window.confirm(`Set new number for ${newName}`);
+      if(result){
+      let i = persons.findIndex((prs => prs.name === newName))
+      let clone = persons.map( prs => prs )
+      clone[i].number = newNumber
+      personService
+        .update(persons[i].id ,kakkapylly)
+        .then(response => {
+          setPersons(clone)
+        })
+      }
     } else {
-      window.alert(`${newName} is already added to phonebook`)
+      personService
+      .create(kakkapylly)
+      .then(response => {
+        setPersons(persons.concat(response))
+        setNewName('')
+        setNewNumber('')
+      })
     }
   }
 
@@ -72,7 +95,7 @@ const App = () => {
   const handleFilterChange = (event) => {
     setNewFilter(event.target.value)
   }
-  
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -83,7 +106,6 @@ const App = () => {
       <PeopleNumbers persons={persons} newFilter={newFilter} />
     </div>
   )
-
 }
 
 export default App
