@@ -1,59 +1,25 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import personService from './services/persons'
-
-const Filter = (props) => {
-  return(
-    <p>
-      <input value={props.filterValue} onChange={props.handleFilterChange}/>
-    </p>
-  )
-}
-
-const Formi = (props) => {
-  return(
-    <form onSubmit={props.addName}>
-        <div>
-          name: <input value={props.newName} onChange={props.handleNameChange}/>
-          <p></p>
-          number: <input value={props.newNumber} onChange={props.handleNumberChange} />
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
-  )
-}
-
-const DelButt = ({id}) => {
-  return(
-    <button onClick={() => personService.remove(id)}>delete</button>
-  )
-}
-
-const PeopleNumbers = (props) => {
-  return(
-    <ul>
-        {props.persons.filter(prs => prs.name.toLowerCase().includes(props.newFilter))
-        .map(prs => <li key={prs.id}>
-          {prs.name} {prs.number}
-          <DelButt id={prs.id}/>
-          </li>)}
-      </ul>
-  )
-}
+import Filter from './components/Filter'
+import PeopleNumbers from './components/PeopleNumbers'
+import Formi from './components/Formi'
+import Notification from './components/Notification'
 
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [newFilter, setNewFilter] = useState('')
+  const [errorMessage, setErrorMessage] = useState('')
 
-  personService
+  useEffect(() => {
+   personService
     .getAll()
     .then(initialPersons => {
       setPersons(initialPersons)
     })
+},[])
 
   const addName = (event) => {
     event.preventDefault()
@@ -74,6 +40,7 @@ const App = () => {
           setPersons(clone)
         })
       }
+      setErrorMessage(`${newName} update succesful`)
     } else {
       personService
       .create(kakkapylly)
@@ -82,7 +49,40 @@ const App = () => {
         setNewName('')
         setNewNumber('')
       })
+      setErrorMessage(`Person ${newName} added to db`)
+      setTimeout(()=> {
+        setErrorMessage(null)
+      }, 5000)
     }
+  }
+
+  const removeName = (event, id) => {
+    console.log("removeName id: ", id)
+    let res = personService.remove(id)
+        .then(response => {
+          setErrorMessage(`element ${id} removed from db`)
+          setTimeout(()=> {
+            setErrorMessage(null)
+          }, 5000)
+        })
+        .catch(err => {
+          if(err.response.status == 404) {
+            setErrorMessage(
+              `Information of element id: ${id}, already removed from db`
+            )
+            setTimeout(() => {
+                setErrorMessage(null)
+            }, 5000)
+          } else {
+            setErrorMessage(
+              `Problem removing element id: ${id}, from db`
+            )
+            setTimeout(() => {
+                setErrorMessage(null)
+            }, 5000)
+          }
+        })
+      setPersons(persons.filter(prs => prs.id !== id))   
   }
 
   const handleNameChange = (event) => {
@@ -99,11 +99,14 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={errorMessage}/>
       <Filter filterValue={newFilter} handleFilterChange={handleFilterChange} />
       <Formi addName={addName} newName={newName} handleNameChange={handleNameChange}
              newNumber={newNumber} handleNumberChange={handleNumberChange} />
       <h2>Numbers</h2>
-      <PeopleNumbers persons={persons} newFilter={newFilter} />
+      <PeopleNumbers persons={persons} 
+        newFilter={newFilter} 
+        buttFunc={removeName}/>
     </div>
   )
 }
