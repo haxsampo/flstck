@@ -38,6 +38,8 @@ object1.address = 'Tapiola'
 object1['secret number'] = 12341
 ```
 
+mikä tahansa JavaScript-olio on truthy, eli katsotaan todeksi vertailuoperaatiossa. undefined taas on falsy eli epätosi.
+
 ### Nuolifunktiota
 
 Täydellinen tapa nuolifunktion määrittelyyn on 
@@ -102,7 +104,28 @@ const total =
 ### NPM
 
 Npm-komennot tulee antaa aina projektin juurihakemistossa
+npm update päivittää projektin riippuvuudet
 
 ### Json/feikkiserveröinti
 
 npx json-server --port=3001 --watch db.json
+tähän oli joku kikkam iten pitäis toimia näppärämmin
+
+### Nodeserveri
+
+initialisointi npm init
+-> npm start tai node index.js
+
+npm install express -> kirjasto serverirunkkaukseen
+npm install --save-dev nodemon 'nodemon will watch the files in the directory n which nodemon was started and if any files change, nodemon will automatically restart your node application'
+  -> määritellään npm skripti tiedostoon package.json^
+  ```
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  ```
+  -> npm run dev
+
+

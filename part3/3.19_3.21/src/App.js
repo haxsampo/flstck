@@ -49,10 +49,14 @@ const App = () => {
         setNewName('')
         setNewNumber('')
       })
-      setErrorMessage(`Person ${newName} added to db`)
-      setTimeout(()=> {
-        setErrorMessage(null)
-      }, 5000)
+      .catch(error => {
+        setErrorMessage(error.response.data.error)
+        setTimeout(() => {
+          setErrorMessage(null)},5000)
+      })
+      setErrorMessage(`lissätty ${kakkapylly.name}`)
+        setTimeout(() => {
+          setErrorMessage(null)},5000)
     }
   }
 
