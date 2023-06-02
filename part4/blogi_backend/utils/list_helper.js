@@ -63,7 +63,6 @@ const mostLikes = (bl) => {
             most = authors[av]
         }
     }
-    console.log("authors:", authors)
     return most
 }
 
