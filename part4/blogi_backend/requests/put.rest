@@ -2,8 +2,8 @@ POST http://localhost:3003/api/blogs
 Content-Type: application/json
 
 {
-    "title": "Ja tän pitäis olla testiympäristössä",
+    "title": "uusi postaus, asyncillä",
     "author": "smpae",
     "url": "testi_kurlaus",
-    "likes": 1
+    "likes": 3
 }

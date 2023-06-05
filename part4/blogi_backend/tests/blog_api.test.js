@@ -50,7 +50,6 @@ describe('blog api tests, basic stuff really', () => {
 
     test('blog has field id instead of _id', async () => {
         const res = await api.get('/api/blogs')
-        console.log(res)
         expect(res.body[0].id).toBeDefined()
     })
 
@@ -80,10 +79,73 @@ describe('blog api, post', () => {
         }
         let blogobji = new Blog(blag)
         await blogobji.save()
+
         const res = await Blog.find({})
-        //console.log("MNJAAA", res)
         let authors = res.map(x => x.author)
         expect(authors).toContain("Reeeandspan")
+    })
+
+})
+
+
+describe('blog api, empty fields', () => {
+
+    test('no likes -> 0', async () => {
+        blag = {
+            title: 'this blog does not have the like field',
+            author: 'Reeeandspan',
+            url: 'lasdjolaisuhdjoaisdj'
+        }
+        await api
+            .post('/api/blogs')
+            .send(blag)
+            .expect(200)
+            .expect('Content-Type', /application\/json/)
+
+        const res = await Blog.find({})
+        let newBlog = res.filter(blog => blog.title == 'this blog does not have the like field')
+        expect(newBlog[0].likes).toEqual(0)
+    })
+
+    test('no title or url -> 400', async () => {
+        const newBlog = {
+            author: "aljd",
+            likes: 3
+        }
+        await api
+            .post('/api/blogs')
+            .send(newBlog)
+            .expect(400)
+        const res = await Blog.find({})
+        expect(res.length).toEqual(initialBlogs.length)
+    })
+
+    test('no title  -> 400', async () => {
+        const newBlog = {
+            author: "aljd",
+            likes: 3,
+            url: "aosihdjoaisuhdj"
+        }
+        await api
+            .post('/api/blogs')
+            .send(newBlog)
+            .expect(400)
+        const res = await Blog.find({})
+        expect(res.length).toEqual(initialBlogs.length)
+    })
+
+    test('no url  -> 400', async () => {
+        const newBlog = {
+            author: "aljd",
+            likes: 3,
+            title: "tämä on titteli"
+        }
+        await api
+            .post('/api/blogs')
+            .send(newBlog)
+            .expect(400)
+        const res = await Blog.find({})
+        expect(res.length).toEqual(initialBlogs.length)
     })
 
 })
