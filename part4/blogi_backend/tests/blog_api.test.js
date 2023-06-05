@@ -150,6 +150,44 @@ describe('blog api, empty fields', () => {
 
 })
 
+describe('blog api, deletion', () => {
+
+    test('one blog removal, please and thank you', async () => {
+        const startingBlogs = await Blog.find({})
+        const del_this = startingBlogs[0]
+        await api
+            .delete(`/api/blogs/${del_this.id}`)
+            .expect(204)
+        const notesAfterDeleting = await Blog.find({})
+        expect(notesAfterDeleting).toHaveLength(initialBlogs.length - 1)
+        const titles = notesAfterDeleting.map(blag => blag.title)
+        expect(titles).not.toContain(del_this.title)
+
+    })
+
+})
+
+
+describe('blog api, update', () => {
+
+    test('update one', async () => {
+        const startingBlogs = await Blog.find({})
+        const change_this = startingBlogs[0]
+        const old_likes = change_this.likes
+        change_this.likes += 1
+        await api
+            .put(`/api/blogs/${change_this.id}`)
+            .send(change_this)
+            .expect(204)
+        const notesAfterUpdate = await Blog.find({})
+        expect(notesAfterUpdate).toHaveLength(initialBlogs.length)
+        const corrBlog = notesAfterUpdate.filter(blag => blag.title == change_this.title)
+        expect(corrBlog[0].likes).toEqual(old_likes + 1)
+
+    })
+
+})
+
 
 afterAll(async () => {
     await mongoose.connection.close()

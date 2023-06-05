@@ -20,4 +20,19 @@ blogRouter.post('/', async (request, response) => {
     response.json(savedBlog)
 })
 
+blogRouter.delete('/:id', async (request, response, next) => {
+    await Blog.findByIdAndRemove(request.params.id)
+    response.status(204).end()
+})
+
+blogRouter.put('/:id', async (request, response, next) => {
+    console.log('UPDATE FUNCTIONG ENGAGE')
+    console.log("request body:", request.body)
+    console.log("id: ", request.params.id)
+    const blag = new Blog(request.body._doc)
+    console.log("new blag: ", blag)
+    await Blog.findByIdAndUpdate(request.params.id, blag, { new: true })
+    response.status(204).end()
+})
+
 module.exports = blogRouter
