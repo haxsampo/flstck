@@ -183,7 +183,6 @@ describe('blog api, update', () => {
         expect(notesAfterUpdate).toHaveLength(initialBlogs.length)
         const corrBlog = notesAfterUpdate.filter(blag => blag.title == change_this.title)
         expect(corrBlog[0].likes).toEqual(old_likes + 1)
-
     })
 
 })

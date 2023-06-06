@@ -26,11 +26,11 @@ blogRouter.delete('/:id', async (request, response, next) => {
 })
 
 blogRouter.put('/:id', async (request, response, next) => {
-    console.log('UPDATE FUNCTIONG ENGAGE')
-    console.log("request body:", request.body)
-    console.log("id: ", request.params.id)
+    if (!request.params.id) {
+        response.status(400).end()
+        return
+    }
     const blag = new Blog(request.body._doc)
-    console.log("new blag: ", blag)
     await Blog.findByIdAndUpdate(request.params.id, blag, { new: true })
     response.status(204).end()
 })
