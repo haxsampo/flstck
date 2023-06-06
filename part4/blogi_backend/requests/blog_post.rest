@@ -1,0 +1,10 @@
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+
+{
+    "title": "mutsis oma blogi",
+    "author": "mutsis",
+    "url": "urlir.com",
+    "likes": 0,
+    "user":"647f9a3136f703b46461289d"
+}

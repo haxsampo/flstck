@@ -2,8 +2,8 @@ POST http://localhost:3003/api/users
 Content-Type: application/json
 
 {
-    "username": "megalukki",
-    "name": "lukki matti",
-    "password": "testi_kurlauasasd2s",
+    "username": "sauron",
+    "name": "sun mutsis",
+    "password": "t6561651674651asasd2s",
     "blogs": []
 }
