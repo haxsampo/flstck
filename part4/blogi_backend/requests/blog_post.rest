@@ -1,10 +1,10 @@
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InNhbXBhbnNzaSIsImlkIjoiNjQ4MmZkZmNiODkzYjUwMTllMmZkMDY5IiwiaWF0IjoxNjg2MzA2MzIxfQ.gAqR6HfCiFajVt9ulVeH_PrEeN6jkn4-ZuBPyWwRodE
 
 {
-    "title": "mutsis oma blogi",
-    "author": "mutsis",
+    "title": "pitäis olla sampanssin blogi",
+    "author": "1111111111",
     "url": "urlir.com",
-    "likes": 0,
-    "user":"647f9a3136f703b46461289d"
+    "likes": 133
 }
