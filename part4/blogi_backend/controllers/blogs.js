@@ -3,16 +3,6 @@ const Blog = require('../models/blog')
 const User = require('../models/user')
 const jwt = require('jsonwebtoken')
 
-/*
-const getTokenFrom = request => {
-    const authorization = request.get('authorization')
-    if (authorization && authorization.startsWith('Bearer ')) {
-        return authorization.replace('Bearer ', '')
-    }
-    return null
-}
-*/
-
 blogRouter.get('/', async (request, response) => {
     const blogs = await Blog.find({}).populate('user', { username: 1, name: 1, id: 1 })
     response.json(blogs)
@@ -33,8 +23,8 @@ blogRouter.post('/', async (request, response) => {
         user = users[0]
     }
     */
-   //let blog = new Blog(request.body)
-    const user = await User.findById(decodedToken.id)
+    //let blog = new Blog(request.body)
+    const user = await User.findById(request.user)
     const body = request.body
     let likes = body.likes === undefined || body.likes === null
         ? 0
@@ -64,8 +54,20 @@ blogRouter.post('/', async (request, response) => {
 })
 
 blogRouter.delete('/:id', async (request, response, next) => {
-    await Blog.findByIdAndRemove(request.params.id)
-    response.status(204).end()
+    const decodedToken = jwt.verify(request.token, process.env.SECRET)
+    if (!decodedToken.id) {
+        return response.status(401).json({ error: 'token invalid' })
+    }
+    const blog = await Blog.findById(request.params.id)
+    console.log("decotok ", decodedToken)
+    console.log("req.params.id blog:", blog)
+    console.log("decodedToken.id", decodedToken.id, "    request.body.user:", blog.user)
+    if (decodedToken.id.toString() === blog.user.toString()) {
+        await Blog.findByIdAndRemove(request.params.id)
+        response.status(204).end()
+    } else {
+        return response.status(401).json({ error: 'blog targeted for deletion not made by active user - access denied' })
+    }
 })
 
 blogRouter.put('/:id', async (request, response, next) => {

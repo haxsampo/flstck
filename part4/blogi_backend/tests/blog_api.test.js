@@ -155,6 +155,7 @@ describe('blog api, deletion', () => {
     test('one blog removal, please and thank you', async () => {
         const startingBlogs = await Blog.find({})
         const del_this = startingBlogs[0]
+        console.log("DELTHIS: ", del_this)
         await api
             .delete(`/api/blogs/${del_this.id}`)
             .expect(204)

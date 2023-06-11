@@ -1,9 +1,9 @@
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NasdasdVCJ9.eyJ1c2VybmFtZSI6InNhbXBhbnNzaSIsImlkIjoiNjQ4MmZkZmNiODkzYjUwMTllMmZkMDY5IiwiaWF0IjoxNjg2MzMzOTA1LCJleHAiOjE2ODYzMzc1MDV9.jRxP6DNVoDusocgAwbd5k2gLMLED16vXHJERKPnsjng
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InNhbXBhbnNzaSIsImlkIjoiNjQ4MmZkZmNiODkzYjUwMTllMmZkMDY5IiwiaWF0IjoxNjg2NDg2MjE1LCJleHAiOjE2ODY0ODk4MTV9.N1hYKU_44dFXGF26D5TGPM74LzWscxKeb5r4VztCLQU
 
 {
-    "title": "sampanssiblogi nro 2",
+    "title": "sampanssiblogi nro 3",
     "author": "2",
     "url": "urlir.com",
     "likes": 2
