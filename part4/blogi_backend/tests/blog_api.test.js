@@ -1,14 +1,13 @@
 const mongoose = require('mongoose')
+const bcrypt = require('bcrypt')
 const supertest = require('supertest')
 const app = require('../app')
 const Blog = require('../models/blog')
+const User = require('../models/user')
 const api = supertest(app)
 
-/*
-Tyhjennä testitietokanta
-Alusta testitietokanta tietylle määrälle paskaa
--> testaa määrä
-*/
+let testUser = ""
+let testToken = ""
 
 const initialBlogs = [
     {
@@ -31,6 +30,16 @@ beforeEach(async () => {
     await blobj.save()
     let blobj1 = new Blog(initialBlogs[1])
     await blobj1.save()
+
+    await User.deleteMany({})
+    const passwordHash = await bcrypt.hash('salainensalasana', 10)
+    const user = new User({ username: 'pruut', passwordHash })
+    await user.save()
+
+    const loginInfo = await api
+        .post('/api/login')
+        .send({ username: 'pruut', password: 'salainensalasana' })
+    testToken = loginInfo._body.token
 })
 
 
@@ -65,12 +74,28 @@ describe('blog api, post', () => {
             likes: 1
         }
         let blogobji = new Blog(blag)
-        await blogobji.save()
+
+        const loginInfo = await api
+            .post('/api/login')
+            .send({ username: 'pruut', password: 'salainensalasana' })
+        const token = loginInfo._body.token
+        await api
+            .post('/api/blogs')
+            .set('Authorization', `Bearer ${token}`)
+            .send(blag)
+            .expect(200)
+            .expect('Content-Type', /application\/json/)
+
+
         const res = await api.get('/api/blogs')
         expect(res.body).toHaveLength(initialBlogs.length + 1)
     })
 
     test('correct blog objects in db after adding', async () => {
+        const loginInfo = await api
+            .post('/api/login')
+            .send({ username: 'pruut', password: 'salainensalasana' })
+        const token = loginInfo._body.token
         blag = {
             title: 'BS',
             author: 'Reeeandspan',
@@ -78,11 +103,30 @@ describe('blog api, post', () => {
             likes: 1
         }
         let blogobji = new Blog(blag)
-        await blogobji.save()
+        await api
+            .post('/api/blogs')
+            .set('Authorization', `Bearer ${token}`)
+            .send(blag)
+            .expect(200)
+            .expect('Content-Type', /application\/json/)
 
         const res = await Blog.find({})
         let authors = res.map(x => x.author)
         expect(authors).toContain("Reeeandspan")
+    })
+
+    test('tokenless post should return 401', async () => {
+        blag = {
+            title: 'BS',
+            author: 'Reeeandspan',
+            url: 'lasdjolaisuhdjoaisdj',
+            likes: 1
+        }
+        const rest = await api
+            .post('/api/blogs')
+            .send(blag)
+            .expect(401)
+            .expect('Content-Type', /application\/json/)
     })
 
 })
@@ -91,6 +135,10 @@ describe('blog api, post', () => {
 describe('blog api, empty fields', () => {
 
     test('no likes -> 0', async () => {
+        const loginInfo = await api
+            .post('/api/login')
+            .send({ username: 'pruut', password: 'salainensalasana' })
+        const token = loginInfo._body.token
         blag = {
             title: 'this blog does not have the like field',
             author: 'Reeeandspan',
@@ -98,6 +146,7 @@ describe('blog api, empty fields', () => {
         }
         await api
             .post('/api/blogs')
+            .set('Authorization', `Bearer ${token}`)
             .send(blag)
             .expect(200)
             .expect('Content-Type', /application\/json/)
@@ -114,6 +163,7 @@ describe('blog api, empty fields', () => {
         }
         await api
             .post('/api/blogs')
+            .set('Authorization', `Bearer ${testToken}`)
             .send(newBlog)
             .expect(400)
         const res = await Blog.find({})
@@ -128,6 +178,7 @@ describe('blog api, empty fields', () => {
         }
         await api
             .post('/api/blogs')
+            .set('Authorization', `Bearer ${testToken}`)
             .send(newBlog)
             .expect(400)
         const res = await Blog.find({})
@@ -142,6 +193,7 @@ describe('blog api, empty fields', () => {
         }
         await api
             .post('/api/blogs')
+            .set('Authorization', `Bearer ${testToken}`)
             .send(newBlog)
             .expect(400)
         const res = await Blog.find({})
@@ -153,16 +205,33 @@ describe('blog api, empty fields', () => {
 describe('blog api, deletion', () => {
 
     test('one blog removal, please and thank you', async () => {
-        const startingBlogs = await Blog.find({})
-        const del_this = startingBlogs[0]
-        console.log("DELTHIS: ", del_this)
+        const notesAtStart = await Blog.find({})
+        blag = {
+            title: 'Bloody Shovel',
+            author: 'Spandrell',
+            url: 'lasdjolaisuhdjoaisdj',
+            likes: 1
+        }
+        let blogobji = new Blog(blag)
+        let resp = await api
+            .post('/api/blogs')
+            .set('Authorization', `Bearer ${testToken}`)
+            .send(blag)
+            .expect(200)
+            .expect('Content-Type', /application\/json/)
+        del_blog = JSON.parse(resp.text)
+        del_id = JSON.parse(resp.text).id
+        const blogsAfterAdding = await Blog.find({})
+        expect(blogsAfterAdding).toHaveLength(initialBlogs.length + 1)
+
         await api
-            .delete(`/api/blogs/${del_this.id}`)
+            .delete(`/api/blogs/${del_id}`)
+            .set('Authorization', `Bearer ${testToken}`)
             .expect(204)
         const notesAfterDeleting = await Blog.find({})
-        expect(notesAfterDeleting).toHaveLength(initialBlogs.length - 1)
+        expect(notesAfterDeleting).toHaveLength(initialBlogs.length)
         const titles = notesAfterDeleting.map(blag => blag.title)
-        expect(titles).not.toContain(del_this.title)
+        expect(titles).not.toContain(del_blog.title)
 
     })
 
