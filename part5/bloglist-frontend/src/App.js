@@ -3,6 +3,8 @@ import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import Notification from './components/Notification'
+import BlogForm from './components/BlogForm'
+import Togglable from './components/Togglable'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -94,7 +96,14 @@ const App = () => {
     </button>
   )
 
-  const addBlog = async (event) => {
+  const addBlog = (blogObj) => {
+
+    blogService
+      .create(blogObj)
+      .then(returnedBlog => {
+        setBlogs(blogs.concat(returnedBlog))
+      })
+    /*
     event.preventDefault()
     const blogObj = {
       title: title,
@@ -112,8 +121,29 @@ const App = () => {
     setTimeout(() => {
       setErrorMessage(null)
     }, 5000)
+    */
   }
 
+  return (
+    <div>
+      <Notification message={errorMessage} />
+      <h2>Login</h2>
+      {!user && loginForm()}
+      {user && <div>
+        <p>{user.name} logged in</p>
+        <Togglable buttonLabel='new blog'>
+          <BlogForm createBlog={addBlog} />
+        </Togglable>
+        {blogForm()}
+        {logoutForm()}
+      </div>
+      }
+    </div>
+
+  )
+}
+
+/*
   const addBlogForm = () => (
     <form onSubmit={addBlog}>
       <div>
@@ -146,22 +176,6 @@ const App = () => {
       <button type="submit">Create</button>
     </form>
   )
-
-  return (
-    <div>
-      <Notification message={errorMessage} />
-      <h2>Login</h2>
-      {!user && loginForm()}
-      {user && <div>
-        <p>{user.name} logged in</p>
-        {addBlogForm()}
-        {blogForm()}
-        {logoutForm()}
-      </div>
-      }
-    </div>
-
-  )
-}
+*/
 
 export default App
