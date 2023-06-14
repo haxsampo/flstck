@@ -13,10 +13,6 @@ const App = () => {
   const [user, setUser] = useState(null)
   const [errorMessage, setErrorMessage] = useState(null)
 
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
-
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs(blogs)
@@ -81,11 +77,24 @@ const App = () => {
     </form>
   )
 
+  const addLike = async ({ id, blog }) => {
+    let blag = blogs.find(n => n.id === id)
+    const newBlag = {
+      user: blag.user.id,
+      likes: blag.likes + 1,
+      author: blag.author,
+      title: blag.title,
+      url: blag.url
+    }
+    const resp = await blogService.update(id, newBlag)
+    setBlogs(blogs.map(blarg => blarg.id !== id ? blarg : resp.data))
+  }
+
   const blogForm = () => (
     <div>
       <h2>blogs</h2>
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} updateFunc={() => addLike(blog)} />
       )}
     </div>
   )
@@ -97,31 +106,11 @@ const App = () => {
   )
 
   const addBlog = (blogObj) => {
-
     blogService
       .create(blogObj)
       .then(returnedBlog => {
         setBlogs(blogs.concat(returnedBlog))
       })
-    /*
-    event.preventDefault()
-    const blogObj = {
-      title: title,
-      author: author,
-      url: url
-    }
-
-    const ret = await blogService.create(blogObj)
-    console.log(ret)
-    setBlogs(blogs.concat(ret))
-    setTitle('')
-    setAuthor('')
-    setUrl('')
-    setErrorMessage(`Added new blog: ${ret.title} by ${ret.author}`)
-    setTimeout(() => {
-      setErrorMessage(null)
-    }, 5000)
-    */
   }
 
   return (

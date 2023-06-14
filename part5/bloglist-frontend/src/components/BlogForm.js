@@ -14,17 +14,9 @@ const BlogForm = ({ createBlog }) => {
         }
 
         const ret = createBlog(blogObj)
-        console.log(ret)
-        //setBlogs(blogs.concat(ret))
         setTitle('')
         setAuthor('')
         setUrl('')
-        /*
-        setErrorMessage(`Added new blog: ${ret.title} by ${ret.author}`)
-        setTimeout(() => {
-            setErrorMessage(null)
-        }, 5000)
-        */
     }
 
     return (
