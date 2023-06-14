@@ -13,9 +13,13 @@ const App = () => {
   const [user, setUser] = useState(null)
   const [errorMessage, setErrorMessage] = useState(null)
 
+  const sortBlogsDescending = (a, b) => {
+    return parseFloat(b.likes) - parseFloat(a.likes)
+  }
+
   useEffect(() => {
     blogService.getAll().then(blogs =>
-      setBlogs(blogs)
+      setBlogs(blogs.sort(sortBlogsDescending))
     )
   }, [])
 
