@@ -36,7 +36,6 @@ router.post('/', userExtractor, async (request, response) => {
 
 router.put('/:id', async (request, response) => {
     const { title, url, author, likes } = request.body
-
     const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, { title, url, author, likes }, { new: true })
 
     response.json(updatedBlog)
@@ -44,17 +43,14 @@ router.put('/:id', async (request, response) => {
 
 router.delete('/:id', userExtractor, async (request, response) => {
     const blog = await Blog.findById(request.params.id)
-
     const user = request.user
-
     if (!user || blog.user.toString() !== user.id.toString()) {
         return response.status(401).json({ error: 'operation not permitted' })
     }
 
     user.blogs = user.blogs.filter(b => b.toString() !== blog.id.toString())
-
     await user.save()
-    await blog.remove()
+    await Blog.findByIdAndRemove(request.params.id)
 
     response.status(204).end()
 })

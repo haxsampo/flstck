@@ -39,6 +39,7 @@ const App = () => {
       const user = await loginService.login({ username, password })
       window.localStorage.setItem('loggedBlogAppUser', JSON.stringify(user))
       blogService.setToken(user.token)
+      window.localStorage.setItem('loggedUserId', JSON.stringify(user.userid))
       setUser(user)
       setUsername('')
       setPassword('')
@@ -81,7 +82,7 @@ const App = () => {
     </form>
   )
 
-  const addLike = async ({ id, blog }) => {
+  const addLike = async ({ id }) => {
     let blag = blogs.find(n => n.id === id)
     const newBlag = {
       user: blag.user.id,
@@ -94,11 +95,20 @@ const App = () => {
     setBlogs(blogs.map(blarg => blarg.id !== id ? blarg : resp.data))
   }
 
+  const delBlog = async (blog) => {
+    let blag = blogs.find(n => n.id === blog.id)
+    const resp = await blogService.deleteBlog(blog.id, blog.user.id)
+    const newblogs = blogs.filter(bl => bl.id !== blag.id)
+    setBlogs(newblogs)
+  }
+
   const blogForm = () => (
     <div>
       <h2>blogs</h2>
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} updateFunc={() => addLike(blog)} />
+        <Blog key={blog.id} blog={blog}
+          updateFunc={() => addLike(blog)}
+          delFunc={() => delBlog(blog)} />
       )}
     </div>
   )
@@ -109,12 +119,10 @@ const App = () => {
     </button>
   )
 
-  const addBlog = (blogObj) => {
-    blogService
-      .create(blogObj)
-      .then(returnedBlog => {
-        setBlogs(blogs.concat(returnedBlog))
-      })
+  const addBlog = async (blogObj) => {
+    const ret = await blogService.create(blogObj)
+    setBlogs(blogs.concat(ret))
+
   }
 
   return (
@@ -135,40 +143,5 @@ const App = () => {
 
   )
 }
-
-/*
-  const addBlogForm = () => (
-    <form onSubmit={addBlog}>
-      <div>
-        Title
-        <input
-          type="text"
-          value={title}
-          name="Title"
-          onChange={({ target }) => setTitle(target.value)}
-        />
-      </div>
-      <div>
-        Author
-        <input
-          type="text"
-          value={author}
-          name="Author"
-          onChange={({ target }) => setAuthor(target.value)}
-        />
-      </div>
-      <div>
-        Url
-        <input
-          type="text"
-          value={url}
-          name="Url"
-          onChange={({ target }) => setUrl(target.value)}
-        />
-      </div>
-      <button type="submit">Create</button>
-    </form>
-  )
-*/
 
 export default App

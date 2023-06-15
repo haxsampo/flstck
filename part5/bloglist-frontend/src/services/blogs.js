@@ -25,12 +25,22 @@ const create = async newObject => {
 }
 
 const update = async (id, newObject) => {
-  console.log("newobject in service", newObject, "   url:", `${baseUrl}/${id}`)
+  //console.log("newobject in service", newObject, "   url:", `${baseUrl}/${id}`)
   //const request = axios.put(`${baseUrl} /${id}`, newObject)
   const resp = await axios.put(`${baseUrl}/${id}`, newObject)
   return resp
 }
 
+const deleteBlog = async (id, userid) => {
+  //const user = window.localStorage.getItem('loggedBlogAppUser')
+  //console.log("blogs id:", id, "  blogs user:", userid)
+  const config = {
+    headers: { Authorization: token },
+  }
+  console.log(config)
+  const response = await axios.delete(`${baseUrl}/${id}`, config)
+  return response
+}
 
 // eslint-disable-next-line import/no-anonymous-default-export
-export default { getAll, create, setToken, update }
+export default { getAll, create, setToken, update, deleteBlog }
