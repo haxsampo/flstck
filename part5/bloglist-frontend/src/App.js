@@ -99,7 +99,7 @@ const App = () => {
 
   const delBlog = async (blog) => {
     let blag = blogs.find(n => n.id === blog.id)
-    const resp = await blogService.deleteBlog(blog.id, blog.user.id)
+    await blogService.deleteBlog(blog.id)
     const newblogs = blogs.filter(bl => bl.id !== blag.id)
     setBlogs(newblogs)
   }

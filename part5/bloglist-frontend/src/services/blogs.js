@@ -31,7 +31,7 @@ const update = async (id, newObject) => {
   return resp
 }
 
-const deleteBlog = async (id, userid) => {
+const deleteBlog = async (id) => {
   //const user = window.localStorage.getItem('loggedBlogAppUser')
   //console.log("blogs id:", id, "  blogs user:", userid)
   const config = {
@@ -42,5 +42,4 @@ const deleteBlog = async (id, userid) => {
   return response
 }
 
-// eslint-disable-next-line import/no-anonymous-default-export
 export default { getAll, create, setToken, update, deleteBlog }

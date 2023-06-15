@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState } from 'react'
 
 const Blog = ({ blog, updateFunc, delFunc }) => {
   const [showFull, setShowFull] = useState(false)
@@ -15,9 +15,9 @@ const Blog = ({ blog, updateFunc, delFunc }) => {
   const showWhenVisible = { display: showFull ? '' : 'none' }
 
   const fullBlog = (blog) => {
-    const userid = window.localStorage.getItem('loggedUserId').toString().replaceAll('"', "")
-    console.log("userid", userid, typeof (userid))
-    console.log("blog.user.id", blog.user.id, typeof (blog.user.id))
+    const userid = window.localStorage.getItem('loggedUserId').toString().replaceAll('"', '')
+    console.log('userid', userid, typeof (userid))
+    console.log('blog.user.id', blog.user.id, typeof (blog.user.id))
     const showdel = userid === blog.user.id ? true : false
     return (
       <div>
