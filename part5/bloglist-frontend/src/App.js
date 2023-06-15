@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -12,6 +12,8 @@ const App = () => {
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
   const [errorMessage, setErrorMessage] = useState(null)
+
+  const blogFormRef = useRef()
 
   const sortBlogsDescending = (a, b) => {
     return parseFloat(b.likes) - parseFloat(a.likes)
@@ -120,6 +122,7 @@ const App = () => {
   )
 
   const addBlog = async (blogObj) => {
+    blogFormRef.current.toggleVisibility()
     const ret = await blogService.create(blogObj)
     setBlogs(blogs.concat(ret))
 
@@ -132,7 +135,7 @@ const App = () => {
       {!user && loginForm()}
       {user && <div>
         <p>{user.name} logged in</p>
-        <Togglable buttonLabel='new blog'>
+        <Togglable buttonLabel='new blog' ref={blogFormRef}>
           <BlogForm createBlog={addBlog} />
         </Togglable>
         {blogForm()}
