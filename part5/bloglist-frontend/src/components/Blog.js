@@ -15,13 +15,23 @@ const Blog = ({ blog, updateFunc, delFunc }) => {
   const showWhenVisible = { display: showFull ? '' : 'none' }
 
   const fullBlog = (blog) => {
-    const userid = window.localStorage.getItem('loggedUserId').toString().replaceAll('"', '')
-    console.log('userid', userid, typeof (userid))
-    console.log('blog.user.id', blog.user.id, typeof (blog.user.id))
+    const ifuser = window.localStorage.getItem('loggedUserId')
+    let userid = ""
+    if (ifuser) {
+      userid = ifuser.toString().replaceAll('"', '')
+    }
+    //console.log('userid', userid, typeof (userid))
+    //console.log('blog.user.id', blog.user.id, typeof (blog.user.id))
     const showdel = userid === blog.user.id ? true : false
     return (
       <div>
-        {blog.title} {blog.author} {blog.likes} {blog.url}
+        <div>
+          {blog.title}
+        </div>
+        <div>{blog.author}</div>
+        <div>{blog.likes}</div>
+        <div>{blog.url}</div>
+
         <button onClick={() => updateFunc(blog.id)}>like</button>
         {showdel &&
           <button onClick={() => delFunc(blog.id)}>delete</button>
@@ -30,15 +40,6 @@ const Blog = ({ blog, updateFunc, delFunc }) => {
     )
 
   }
-  /*
-  {
-  user: "5a43e6b6c37f3d065eaaa581", - eli käyttäjä -> blog.user.id
-  likes: 1,
-  author: "Joel Spolsky",
-  title: "The Joel Test: 12 Steps to Better Code",
-  url: "https://www.joelonsoftware.com/2000/08/09/the-joel-test-12-steps-to-better-code/"
-  }
-  */
 
   const miniBlog = (blog) => (
     <div>
