@@ -97,6 +97,9 @@ const App = () => {
     }
     const resp = await blogService.update(id, newBlag)
     setBlogs(blogs.map(blarg => blarg.id !== id ? blarg : resp.data))
+    blogService.getAll().then(blogs =>
+      setBlogs(blogs.sort(sortBlogsDescending))
+    )
   }
 
   const delBlog = async (blog) => {

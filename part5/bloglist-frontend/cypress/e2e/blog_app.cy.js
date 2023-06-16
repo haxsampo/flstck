@@ -1,3 +1,34 @@
+describe('when logged in, multiple blogs preset', () => {
+  beforeEach(function () {
+    cy.setup_user()
+    cy.login({ username: 'lmuukkai', password: 'salasana' })
+    //cy.post_blog({ title: "1", author: "2", url: "3" })
+  })
+
+  it('when both 0, temporal order, when 1 has more likes, higher likes higher in order', () => {
+    cy.contains('new blog').click()
+    cy.get('#newblog_title').type("huonompi blogi")
+    cy.get('#newblog_author').type("tämä_on_testi_nimi")
+    cy.get('#newblog_url').type("tämä_on_testi_osoite")
+    cy.get("#newblog_submit").click()
+
+    cy.contains('new blog').click()
+    cy.get('#newblog_title').type("parempi blogi")
+    cy.get('#newblog_author').type("tämä_on_testi_nimi")
+    cy.get('#newblog_url').type("tämä_on_testi_osoite")
+    cy.get("#newblog_submit").click()
+
+    cy.get('.blog_class').eq(0).should('contain', 'huonompi blogi')
+    cy.get('.blog_class').eq(1).should('contain', 'parempi blogi')
+
+    cy.get('.blog_class').eq(1).should('contain', 'parempi blogi').contains("show").click()
+    cy.get('.blog_class').eq(1).should('contain', 'parempi blogi').contains("like").click()
+    cy.get('.blog_class').eq(0).should('contain', 'parempi blogi')
+  })
+
+})
+
+
 describe('Blog', () => {
   beforeEach(function () {
     cy.request('POST', 'http://localhost:3003/api/testing/reset')
@@ -118,3 +149,4 @@ describe('when logged in, other', () => {
   })
 
 })
+
