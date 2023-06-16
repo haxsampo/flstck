@@ -15,7 +15,6 @@ const BlogForm = ({ createBlog }) => {
         }
 
         createBlog(blogObj)
-        console.log("blogform, addBlog:", blogObj)
         setTitle('')
         setAuthor('')
         setUrl('')
@@ -26,6 +25,7 @@ const BlogForm = ({ createBlog }) => {
             <div>
                 Title
                 <input
+                    id="newblog_title"
                     type="text"
                     value={title}
                     name="Title"
@@ -36,6 +36,7 @@ const BlogForm = ({ createBlog }) => {
             <div>
                 Author
                 <input
+                    id="newblog_author"
                     type="text"
                     value={author}
                     name="Author"
@@ -46,6 +47,7 @@ const BlogForm = ({ createBlog }) => {
             <div>
                 Url
                 <input
+                    id="newblog_url"
                     type="text"
                     value={url}
                     name="Url"
@@ -53,7 +55,7 @@ const BlogForm = ({ createBlog }) => {
                     placeholder="and url here"
                 />
             </div>
-            <button type="submit">Create</button>
+            <button id="newblog_submit" type="submit">Create</button>
         </form>
     )
 }

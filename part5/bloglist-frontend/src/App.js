@@ -65,6 +65,7 @@ const App = () => {
       <div>
         username
         <input
+          id="username"
           type="text"
           value={username}
           name="Username"
@@ -74,13 +75,14 @@ const App = () => {
       <div>
         password
         <input
+          id="password"
           type="password"
           value={password}
           name="Password"
           onChange={({ target }) => setPassword(target.value)}
         />
       </div>
-      <button type="submit">login</button>
+      <button id="login_button" type="submit">login</button>
     </form>
   )
 
@@ -116,16 +118,21 @@ const App = () => {
   )
 
   const logoutForm = () => (
-    <button onClick={handleLogout}>
+    <button id="logout_button" onClick={handleLogout}>
       Logout
     </button>
   )
 
   const addBlog = async (blogObj) => {
     blogFormRef.current.toggleVisibility()
-    const ret = await blogService.create(blogObj)
+    let ret = await blogService.create(blogObj)
+    const usr = {
+      id: ret.user,
+      name: "",
+      username: ""
+    }
+    ret.user = usr
     setBlogs(blogs.concat(ret))
-
   }
 
   return (

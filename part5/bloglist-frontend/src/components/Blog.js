@@ -52,7 +52,7 @@ const Blog = ({ blog, updateFunc, delFunc }) => {
   }
 
   return (
-    <div style={blogStyle}>
+    <div className="blog_class" style={blogStyle}>
       <div style={hideWhenVisible}>
         <button onClick={toggleVisibility}>show</button>
       </div>
