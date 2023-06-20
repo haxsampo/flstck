@@ -1,15 +1,19 @@
-import { useSelector, useDispatch } from 'react-redux'
-import { vote } from './reducers/anecdoteReducer'
 import NewAnecdote from './components/AnecdoteForm'
+import Anecdotes from './components/AnecdoteList'
 
 const App = () => {
-  const anecdotes = useSelector(state => state)
-  const dispatch = useDispatch()
 
   return (
     <div>
       <h2>Anecdotes</h2>
-      {anecdotes.map(anecdote =>
+      <Anecdotes />
+      <NewAnecdote />
+    </div>
+  )
+}
+
+/*
+{anecdotes.map(anecdote =>
         <div key={anecdote.id}>
           <div>
             {anecdote.content}
@@ -20,10 +24,6 @@ const App = () => {
           </div>
         </div>
       )}
-      <h2>create new</h2>
-      <NewAnecdote />
-    </div>
-  )
-}
+*/
 
 export default App
