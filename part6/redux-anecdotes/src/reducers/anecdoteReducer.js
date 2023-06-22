@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 import anecdoteService from '../services/anecdotes'
 import store from '../store'
+import { setNotification } from './NotificationReducer'
 
 const anecdoteSlice = createSlice({
   name: 'anecdote',
@@ -45,13 +46,11 @@ export const createAnecdote = content => {
 
 export const newVote = (id) => {
   return async dispatch => {
-    console.log(store.getState().anecdotes)
     const chgAne = store.getState().anecdotes.find(n => n.id === id)
     const changed = {
       ...chgAne,
       votes: chgAne.votes + 1
     }
-    console.log(changed)
     /*
     const chgAne = state.find(n => n.id === id)
     const changed = {

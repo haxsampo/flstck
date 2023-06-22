@@ -12,10 +12,13 @@ const Anecdotes = () => {
 
     const voter = (id) => {
         dispatch(newVote(id))
+        dispatch(setNotification(`you voted for ${id}`, 5000))
+        /*
         dispatch(setNotification(`you voted for ${id}`))
         setTimeout(() => {
             dispatch(setNotification(""))
         }, 5000)
+        */
     }
 
     return (
