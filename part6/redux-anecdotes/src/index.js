@@ -1,8 +1,8 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { Provider } from 'react-redux'
+import store from './store'
 import App from './App'
-import storeExp from './store'
 /*
 const reduc = combineReducers({
   anecdotes: reducer,
@@ -11,8 +11,6 @@ const reduc = combineReducers({
 
 const store = createStore(reduc)
 */
-const store = storeExp
-
 ReactDOM.createRoot(document.getElementById('root')).render(
   <Provider store={store}>
     <App />
