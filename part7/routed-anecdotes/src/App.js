@@ -83,9 +83,9 @@ const CreateNew = (props) => {
   //const [info, setInfo] = useState('')
   const navigate = useNavigate()
 
-  const content = useField('text')
-  const info = useField('text')
-  const author = useField('text')
+  const { reset: resetContent, ...content } = useField('text')
+  const { reset: resetInfo, ...info } = useField('text')
+  const { reset: resetAuthor, ...author } = useField('text')
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -98,6 +98,12 @@ const CreateNew = (props) => {
     })
 
     navigate('/')
+  }
+
+  const handleReset = (e) => {
+    resetContent()
+    resetInfo()
+    resetAuthor()
   }
   //<input name='content' value={content} onChange={(e) => setContent(e.target.value)} />
   //<input name='author' value={author} onChange={(e) => setAuthor(e.target.value)} />
@@ -120,6 +126,7 @@ const CreateNew = (props) => {
           <input {...info} />
         </div>
         <button>create</button>
+        <button type="button" onClick={handleReset}>reset</button>
       </form>
     </div>
   )
