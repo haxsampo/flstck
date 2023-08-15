@@ -17,16 +17,18 @@ const useField = (type) => {
 
 const useCountry = (name) => {
   const [country, setCountry] = useState(null)
-
+  
   useEffect(() => {
     axios.get(`https://studies.cs.helsinki.fi/restcountries/api/name/${name}`)
       .then(res => {
         setCountry(res)
       })
   }, [name])
-
+  
   return country
 }
+
+const kakka = () => { (<p>hello</p>) }
 
 const Country = ({ country }) => {
 
@@ -65,11 +67,12 @@ const Country = ({ country }) => {
 
 */
 
+
 const App = () => {
   const nameInput = useField('text')
   const [name, setName] = useState('')
   const country = useCountry(name)
-
+  
   const fetch = (e) => {
     e.preventDefault()
     setName(nameInput.value)
@@ -81,7 +84,7 @@ const App = () => {
         <input {...nameInput} />
         <button>find</button>
       </form>
-
+      <button onClick={() => console.log('wish you were beer')}>press</button>
       <Country country={country} />
     </div>
   )
